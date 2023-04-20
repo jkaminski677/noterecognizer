@@ -1,32 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pitch.js Example</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@mikolajblaszczyk/pitchfinder@1.2.0/dist/pitchfinder.min.js"></script> -->
+    
+  </head>
+  <body>
+    <style>
+        #show{
+            border: 2px solid brown;
+            width: 200px;
+            height: 150px;
+        }
+    </style>
+    <h1>Pitch.js Example</h1>
+    <div id="show"></div>
+    <script>
+        // Tworzenie kontekstu AudioContext
+        const wynikiDiv = document.getElementById("show");
+       const AudioContext = window.AudioContext || window.webkitAudioContext;
+       const audioContext = new AudioContext();
 
-<head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <meta charset="utf-8" />
+       
+   
+       // Uzyskiwanie dostępu do urządzenia mikrofonu
+       navigator.mediaDevices.getUserMedia({ audio: true })
+       .then((stream) => {
+           // Tworzenie źródła dźwięku z mediów strumieniowych
+           const source = audioContext.createMediaStreamSource(stream);
+           
+           // Tworzenie analizatora częstotliwości
+           const analyser = audioContext.createAnalyser();
+           analyser.fftSize = 2048;
+           
+           // Podłączanie źródła dźwięku do analizatora częstotliwości
+           source.connect(analyser);
+           
+           // Tworzenie bufora o rozmiarze wynikającym z fftSize analizatora
+           const bufferLength = analyser.frequencyBinCount;
+           const dataArray = new Float32Array(bufferLength);
+           
+           // Funkcja wywoływana co pewien czas, która odczytuje dane z analizatora częstotliwości
+           function update() {
+           analyser.getFloatFrequencyData(dataArray);
+           
+           // Obliczanie częstotliwości dźwięków
+           const maxIndex = dataArray.indexOf(Math.max(...dataArray));
+           const frequency = audioContext.sampleRate * maxIndex / bufferLength;
+           
+           console.log(frequency);
+           wynikiDiv.innerHTML = frequency;
 
-</head>
+           
+           requestAnimationFrame(update);
+           }
+           
+           // Rozpoczęcie odświeżania danych z analizatora częstotliwości
+           requestAnimationFrame(update);
+       })
+       .catch((error) => {
+           console.error(error);
+       });
 
-<body>
-  <div>
-    <h2>
-      The Guitar Tuner
-    </h2>
-    <div id="show">f</div>
-
-
-    <p>
-      Each line below represents a string of a guitar. Choose the guitar string that you want to do the tunning with. <br>The color in the center of the circle is the color you will be matching with the outer glow of the circle by using the pitch of your guitar.
-    </p>
-  </div>
-  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
-  <script src="sketch.js"></script>
-  <!--       <div>
-    <a href="https://editor.p5js.org/michellu0929/present/0Nn0WU2Ep"> PLAY THE SNAKE GAME</a>
-      </div> -->
-
-</body>
-
+       </script>
+  </body>
 </html>
+

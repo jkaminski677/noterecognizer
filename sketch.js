@@ -12,7 +12,6 @@ let h, s, b, h1, s1, b1;
 let stringTone;
 let stringName;
 const wynikiDiv = document.getElementById("show");
-.tejdghjdghjdgh
 function setup() {
   createCanvas(500, 550);
   //console.log(ml5.version);
