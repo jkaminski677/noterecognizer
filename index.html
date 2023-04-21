@@ -43,7 +43,7 @@
            
            // Tworzenie analizatora częstotliwości
            const analyser = audioContext.createAnalyser();
-           analyser.fftSize = 2048;
+           analyser.fftSize = 16384;
            
            // Podłączanie źródła dźwięku do analizatora częstotliwości
            source.connect(analyser);
@@ -57,7 +57,7 @@
            analyser.getFloatFrequencyData(dataArray);
            
            // Obliczanie częstotliwości dźwięków
-           const maxIndex = dataArray.indexOf(Math.max(...dataArray));
+           const maxIndex = dataArray.indexOf(Math.max(...dataArray)) /2;
            const frequency = audioContext.sampleRate * maxIndex / bufferLength;
            
            console.log(frequency);
