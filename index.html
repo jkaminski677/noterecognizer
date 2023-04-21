@@ -13,14 +13,25 @@
             width: 200px;
             height: 150px;
         }
+        #button{
+          margin: 10px;
+          width: 100px;
+          height: 50px;
+        }
     </style>
     <h1>Pitch.js Example</h1>
     <div id="show"></div>
+    <button id="button">wciśnij</button>
     <script>
         // Tworzenie kontekstu AudioContext
         const wynikiDiv = document.getElementById("show");
        const AudioContext = window.AudioContext || window.webkitAudioContext;
        const audioContext = new AudioContext();
+       document.querySelector('button').addEventListener('click', function() {
+        audioContext.resume().then(() => {
+          console.log('Playback resumed successfully');
+        });
+      });
 
        
    
