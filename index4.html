@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.8.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pitchfinder@6.0.0/dist/pitchfinder.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/microphone-stream@0.3.0/dist/microphone-stream.min.js"></script>
+  
+</head>
+<body>
+    
+
+    <script>
+        //importujemy potrzebne biblioteki
+        // import * as tf from '@tensorflow/tfjs';
+        // import * as pitch from 'pitchfinder';
+        // import * as mic from 'microphone-stream';
+
+        //ustawiamy potrzebne parametry
+        // const MODEL_URL = 'https://storage.googleapis.com/tfjs-models/tfjs/Crepe/tfjs_model_v1/model.json';
+        const MODEL_URL = 'https://tfhub.dev/google/tfjs-model/crepe/2/default/1/model.json';
+
+        const INPUT_SHAPE = [null, 1024];
+        const SAMPLE_RATE = 44100;
+        const HOP_SIZE = 512;
+        const MIN_FREQ = 82;
+        const MAX_FREQ = 1000;
+        const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        //ładowanie modelu z serwera
+        async function loadModel() {
+        const model = await tf.loadLayersModel(MODEL_URL);
+        return model;
+        }
+
+        //tworzenie funkcji do przetwarzania strumienia audio
+        function processAudioStream(model) {
+        //tworzenie obiektu do przetwarzania dźwięku
+        const pitchDetector = pitch.default(MIN_FREQ, MAX_FREQ, INPUT_SHAPE[1], SAMPLE_RATE);
+        const microphone = mic({
+            bufferSize: INPUT_SHAPE[0] * HOP_SIZE * 2,
+            sampleRate: SAMPLE_RATE,
+            channels: 1,
+            context: new AudioContext()
+        });
+        
+        //przetwarzanie strumienia audio
+        microphone.on('data', async (audioChunk) => {
+            //konwersja audioChunk na tensor
+            const audioTensor = tf.tensor2d(audioChunk, INPUT_SHAPE, 'float32').div(32768.0);
+            //przetwarzanie tensora przez model
+            const predictions = await model.predict(audioTensor);
+            //wybieranie najwyższej wartości w przewidywaniach
+            const predictionValues = await predictions.data();
+            const maxIndex = predictionValues.indexOf(Math.max(...predictionValues));
+            //konwertowanie indeksu na nutę muzyczną
+            const note = NOTES[maxIndex % NOTES.length] + Math.floor(maxIndex / NOTES.length);
+            //wypisanie wyników
+            console.log('Detected note: ' + note);
+            //czyszczenie tensora
+            tf.dispose(audioTensor);
+            tf.dispose(predictions);
+        });
+        }
+
+        //główna funkcja programu
+        async function main() {
+        //ładowanie modelu
+        const model = await loadModel();
+        //przetwarzanie strumienia audio
+        processAudioStream(model);
+        }
+
+        //wywołanie funkcji głównej
+        main();
+
+    </script>
+</body>
+</html>
