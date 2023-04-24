@@ -22,11 +22,13 @@
     <h1>Pitch.js Example</h1>
     <div id="show"></div>
     <button id="button">wciśnij</button>
+    <a href="index2.html"><button>index2-ml5js</button></a>
     <script>
         // Tworzenie kontekstu AudioContext
         const wynikiDiv = document.getElementById("show");
        const AudioContext = window.AudioContext || window.webkitAudioContext;
        const audioContext = new AudioContext();
+      //  konieczne do uruchomienia audio na smartfonach
        document.querySelector('button').addEventListener('click', function() {
         audioContext.resume().then(() => {
           console.log('Playback resumed successfully');
