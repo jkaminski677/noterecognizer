@@ -23,15 +23,17 @@
     <div id="show"></div>
     <button id="button">wciśnij</button>
     <a href="index2.html"><button>index2-ml5js</button></a>
-    <a href="index4.html"><button>index4-ml5js</button></a>
+    <a href="index4.html"><button>index4</button></a>
+    <a href="index6.html"><button>index6</button></a>
+
 
     <script>
-        // Tworzenie kontekstu AudioContext
-        const wynikiDiv = document.getElementById("show");
-       const AudioContext = window.AudioContext || window.webkitAudioContext;
-       const audioContext = new AudioContext();
+      // Tworzenie kontekstu AudioContext
+      const wynikiDiv = document.getElementById("show");
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContext();
       //  konieczne do uruchomienia audio na smartfonach
-       document.querySelector('button').addEventListener('click', function() {
+      document.querySelector('button').addEventListener('click', function() {
         audioContext.resume().then(() => {
           console.log('Playback resumed successfully');
         });
@@ -40,10 +42,17 @@
        
    
        // Uzyskiwanie dostępu do urządzenia mikrofonu
-       navigator.mediaDevices.getUserMedia({ audio: true })
+       navigator.mediaDevices
+       .getUserMedia({ audio: true })
        .then((stream) => {
            // Tworzenie źródła dźwięku z mediów strumieniowych
            const source = audioContext.createMediaStreamSource(stream);
+
+           // Tworzenie filtru bikwadratowego
+          const filter = audioContext.createBiquadFilter();
+          filter.type = "bandpass";
+          filter.frequency1 = 10;
+          filter.frequency2 = 1100;
            
            // Tworzenie analizatora częstotliwości
            const analyser = audioContext.createAnalyser();
@@ -51,6 +60,7 @@
            
            // Podłączanie źródła dźwięku do analizatora częstotliwości
            source.connect(analyser);
+           filter.connect(analyser);
            
            // Tworzenie bufora o rozmiarze wynikającym z fftSize analizatora
            const bufferLength = analyser.frequencyBinCount;
