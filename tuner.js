@@ -1,4 +1,4 @@
- /*
+/*
 The MIT License (MIT)
 Copyright (c) 2014 Chris Wilson
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,6 +21,16 @@ Note: autoCorrelate comes from https://github.com/cwilso/PitchDetect/pull/23
 with the above license.
 
 */
+
+var inputFreq = 440;
+
+function getValue() {
+  inputFreq = document.getElementById("inputField").value;
+  console.log("Wartość pola wprowadzania: " + inputFreq);
+}
+
+
+
 
 function init() {
     var source;
@@ -107,7 +117,7 @@ function init() {
       // Thanks to PitchDetect: https://github.com/cwilso/PitchDetect/blob/master/js/pitchdetect.js
       var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
       function noteFromPitch( frequency ) {
-        var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+        var noteNum = 12 * (Math.log( frequency / inputFreq )/Math.log(2) );
         return Math.round( noteNum ) + 69;
       }
   
@@ -129,6 +139,8 @@ function init() {
           // Get the closest note
           // Thanks to PitchDetect:
           valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12];
+          monitorValue(document.getElementById('note').textContent);
+
         }
   
         var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
@@ -136,6 +148,7 @@ function init() {
   
         if (autoCorrelateValue === -1) {
           document.getElementById('note').innerText = 'Too quiet...';
+          // monitorValue(0);
           return;
         }
         if (smoothingValue === 'none') {
@@ -175,6 +188,7 @@ function init() {
         }
   
         document.getElementById('note').innerText = valueToDisplay;
+        
       }
   
       var drawFrequency = function() {
@@ -302,5 +316,39 @@ function init() {
       T0 = T0 - b / (2 * a);
     }
   
+
     return sampleRate/T0;
+
   }
+
+
+
+var notes = [];
+var durations = [];
+var currentValue = null;
+var currentValueStartTime = null;
+
+function monitorValue(value) {
+  console.log(value)
+  if (value !== currentValue) {
+    if (currentValue !== null) {
+      // Zapisanie wartości i czasu trwania
+      notes.push(new Date() - currentValueStartTime);
+
+      notes.push(currentValue);
+    }
+    currentValue = value;
+    currentValueStartTime = new Date();
+  }
+  // console.log(notes);
+  // console.log(durations);
+  // console.log(document.getElementById('note').textContent);
+}
+
+
+
+function funcStop(){
+  document.getElementById('drawTables').innerText = notes;
+  document.getElementById('drawTimes').innerText = durations;
+
+}

@@ -1,15 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/3.0.2/vexflow.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <label for="noteInput">Wpisz nuty:</label>
+      <input id="noteInput" type="text" />
+    </div>
+    <canvas id="music"></canvas>
     <script>
-       
+      var VF = Vex.Flow;
+
+      var canvas = document.getElementById("music");
+      var renderer = new VF.Renderer(canvas, VF.Renderer.Backends.CANVAS);
+      renderer.resize(500, 500);
+      var context = renderer.getContext();
+
+      var stave = new VF.Stave(10, 10, 480);
+      stave.addClef("treble").setContext(context).draw();
+
+      var notes = [];
+
+      document.getElementById("noteInput").addEventListener("keyup", function () {
+        var noteInput = this.value;
+
+        // usuwanie starych nut
+        notes.forEach(function (note) {
+          note.removeFromStave();
+        });
+
+        // Tworzenie nowych nut
+        notes = [];
+        var xPos = 50;
+        for (var i = 0; i < noteInput.length; i++) {
+          var note = new VF.StaveNote({
+            clef: "treble",
+            keys: [noteInput[i] + "/4"],
+            duration: "q",
+          });
+          note.setContext(context);
+          note.setStave(stave);
+          note.setX(xPos);
+          notes.push(note);
+          xPos += 40;
+        }
+
+        // Rysowanie nut i aktualizacja pięciolinii na stronie
+        VF.Formatter.FormatAndDraw(context, stave, notes);
+        renderer.render();
+      });
     </script>
-</body>
+  </body>
 </html>
