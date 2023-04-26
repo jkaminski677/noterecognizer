@@ -9,11 +9,25 @@
 
   #drawTables {
     width: 700px;
-    height: 400px;
+    height: 50px;
     border: 1px solid black;
+    overflow: auto;
   }
   #drawTimes{
     width: 700px;
-    height: 40px;
+    height: 50px;
     border: 1px solid black;
+    overflow: auto;
+  }
+  #output {
+    /* width: 100%; */
+    border: 1px solid black;
+  }
+
+  .buttons {
+    display: flex;
+  }
+
+  .inBut{
+    margin: 10px 10px 10px 10px ;
   }

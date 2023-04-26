@@ -29,10 +29,8 @@ function getValue() {
   console.log("Wartość pola wprowadzania: " + inputFreq);
 }
 
-
-
-
 function init() {
+  StartButton.style.display = "none";
     var source;
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
     var analyser = audioContext.createAnalyser();
@@ -138,8 +136,26 @@ function init() {
         } else {
           // Get the closest note
           // Thanks to PitchDetect:
-          valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12];
-          monitorValue(document.getElementById('note').textContent);
+          if(noteFromPitch(autoCorrelateValue) < "48") {
+            valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12 ] + "1";
+          }
+          if (noteFromPitch(autoCorrelateValue) >= "48" && noteFromPitch(autoCorrelateValue) < "60") {
+            valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12 ] + "2";
+          }
+          if (noteFromPitch(autoCorrelateValue) >= "60" && noteFromPitch(autoCorrelateValue) < "72") {
+            valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12 ] + "3";
+          }
+          if (noteFromPitch(autoCorrelateValue) >= "72" && noteFromPitch(autoCorrelateValue) < "84") {
+            valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12 ] + "4";
+          }
+          if (noteFromPitch(autoCorrelateValue) >= "84" && noteFromPitch(autoCorrelateValue) < "96") {
+            valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12 ] + "5";
+          }
+          if (noteFromPitch(autoCorrelateValue) >= "96" && noteFromPitch(autoCorrelateValue) < "108") {
+            valueToDisplay = noteStrings[noteFromPitch(autoCorrelateValue) % 12 ] + "6";
+          }
+          
+          // 36 - 1, 48, 60, 72, 84, 96, 108
 
         }
   
@@ -148,7 +164,6 @@ function init() {
   
         if (autoCorrelateValue === -1) {
           document.getElementById('note').innerText = 'Too quiet...';
-          // monitorValue(0);
           return;
         }
         if (smoothingValue === 'none') {
@@ -186,9 +201,11 @@ function init() {
         if (typeof(valueToDisplay) == 'number') {
           valueToDisplay += ' Hz';
         }
-  
+        // console.log("małpka")
+
+
         document.getElementById('note').innerText = valueToDisplay;
-        
+
       }
   
       var drawFrequency = function() {
@@ -231,6 +248,7 @@ function init() {
       }
       drawNote();
     }
+
   }
   
   
@@ -321,34 +339,3 @@ function init() {
 
   }
 
-
-
-var notes = [];
-var durations = [];
-var currentValue = null;
-var currentValueStartTime = null;
-
-function monitorValue(value) {
-  console.log(value)
-  if (value !== currentValue) {
-    if (currentValue !== null) {
-      // Zapisanie wartości i czasu trwania
-      notes.push(new Date() - currentValueStartTime);
-
-      notes.push(currentValue);
-    }
-    currentValue = value;
-    currentValueStartTime = new Date();
-  }
-  // console.log(notes);
-  // console.log(durations);
-  // console.log(document.getElementById('note').textContent);
-}
-
-
-
-function funcStop(){
-  document.getElementById('drawTables').innerText = notes;
-  document.getElementById('drawTimes').innerText = durations;
-
-}

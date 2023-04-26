@@ -28,15 +28,19 @@
                 <section id="post-body">
                     <div class="vexbox">
                         <div id="output"></div>
-                      </div>
+                    </div>
                     <p><canvas class="visualizer" width="640" height="100"></canvas>
                     <br>
-                    <button id="init" onClick="init()">Start</button>
-                    <button onClick="funcStop()">show</button></p>
                     <h1 id="note">Press start to begin</h1>
                     <div id="drawTables"></div>
                     <div id="drawTimes"></div>
-                    <label for="inputField">Wprowadź częstotliwość:</label>
+                    <div class="buttons">
+                        <button class="inBut" id="init" onClick="init()">Start</button>
+                        <button class="inBut" onClick="funcStop()">show</button></p>
+                        <button class="inBut" onclick="stopFunction()" id="stopButton">Stop</button>
+                        <button class="inBut" onclick="location.reload()">Jeszcze raz</button>
+                    </div>
+                    <label  for="inputField">Wprowadź częstotliwość:</label>
                     <input type="text" id="inputField" name="inputField" placeholder="440">
                     <button onclick="getValue()">Wyślij</button>
 
@@ -45,10 +49,10 @@
                     <input type="radio" id="roundingNone" name="rounding" value="none" >
                     <label for="roundingNone">No rounding</label>
                     <br>
-                    <input type="radio" id="roundingMedium" name="rounding" value="hz" checked>
+                    <input type="radio" id="roundingMedium" name="rounding" value="hz" >
                     <label for="roundingMedium">Round to nearest Hz</label>
                     <br>
-                    <input type="radio" id="roundingHard" name="rounding" value="note">
+                    <input type="radio" id="roundingHard" name="rounding" value="note" checked>
                     <label for="roundingHard">Round to nearest note</label>
                     <br>
                     </div>
@@ -76,6 +80,7 @@
                     <br>
                     </div>
                     <br>
+                    
                 </section>
             </article>
         </section>
