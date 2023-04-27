@@ -76,7 +76,6 @@ stopButton.addEventListener("click", function(){ indexOfNote = 0; notesValueTab.
 var indexOfNote = 0;
 var timin = 0;
 function DrawMyNotes(item) {
-  indexOfNote += 1;
   console.log(item);
   console.log(durations[indexOfNote]);
   if (timin <= 4 ) {
@@ -84,7 +83,45 @@ function DrawMyNotes(item) {
     console.log("Timin: " + timin);
   }
 
+  indexOfNote += 1;
 }
+
+
+
+
+
+
+const { Factory, EasyScore, System } = Vex.Flow;
+const vf = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 620, height: 150  } });
+const score = vf.EasyScore();
+const system = vf.System({
+  x: 10,
+  y: 10,
+  width: 300
+});
+const system2 = vf.System({
+  x: 310,
+  y: 10,
+  width: 300
+});
+
+// First measure
+system.addStave({
+  voices: [
+    score.voice(score.notes('C#5/q, B4/q/r, A4, D#3')),
+
+  ]
+}).addClef('treble').addTimeSignature('4/4');
+
+system2.addStave({
+  voices: [
+    score.voice(score.notes('F#4/h, D4/8, E4, E4, E4')),
+  ]
+});
+
+
+vf.draw();
+
 
 
 
@@ -103,12 +140,12 @@ function DrawMyNotes(item) {
 // system.addStave({
 //   voices: [
 //     // Top voice has 4 quarter notes with stems up.
-//     score.voice(score.notes('C#5/h, A4/q, G#4', { stem: 'up' })),
+//     score.voice(score.notes('C#5/h, A4/q., B4/8/r', { stem: 'up' })),
    
 //     // Bottom voice has two half notes, with stems down.
 //     score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))
 //   ]
-// }).addClef('treble').addTimeSignature('4/4');
+// }).addClef('treble').addTimeSignature('4/8');
 
 // // Draw it!
 // vf.draw();
@@ -191,61 +228,61 @@ function DrawMyNotes(item) {
 
 
 
-// This approach to importing classes works in CJS contexts (i.e., a regular <script src="..."> tag).
-const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
+// // This approach to importing classes works in CJS contexts (i.e., a regular <script src="..."> tag).
+// const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
 
-// In an ESM context (or when using TypeScript), you will need to use the "import" keyword.
-// import { Stave, StaveNote, Beam, Formatter, Renderer } from 'vexflow';
+// // In an ESM context (or when using TypeScript), you will need to use the "import" keyword.
+// // import { Stave, StaveNote, Beam, Formatter, Renderer } from 'vexflow';
 
-// Create an SVG renderer and attach it to the DIV element with id="output".
-const div = document.getElementById("output");
-const renderer = new Renderer(div, Renderer.Backends.SVG);
+// // Create an SVG renderer and attach it to the DIV element with id="output".
+// const div = document.getElementById("output");
+// const renderer = new Renderer(div, Renderer.Backends.SVG);
 
-// Configure the rendering context.
-renderer.resize(720, 130);
-const context = renderer.getContext();
+// // Configure the rendering context.
+// renderer.resize(720, 130);
+// const context = renderer.getContext();
 
 
-// Measure 1
-const staveMeasure1 = new Stave(10, 0, 200);
-staveMeasure1.addClef('treble').setContext(context).draw();
+// // Measure 1
+// const staveMeasure1 = new Stave(10, 0, 200);
+// staveMeasure1.addClef('treble').setContext(context).draw();
 
-const notesMeasure1 = [
-  new StaveNote({ keys: ['c/4'], duration: 'q' }),
-  new StaveNote({ keys: ['d/4'], duration: 'q' }),
-  new StaveNote({ keys: ['b/4'], duration: 'qr' }),
-  new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
-];
+// const notesMeasure1 = [
+//   new StaveNote({ keys: ['c/4'], duration: 'q' }),
+//   new StaveNote({ keys: ['d/4'], duration: 'q' }),
+//   new StaveNote({ keys: ['b/4'], duration: 'qr' }),
+//   new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
+// ];
 
-// Helper function to justify and draw a 4/4 voice
-Formatter.FormatAndDraw(context, staveMeasure1, notesMeasure1);
+// // Helper function to justify and draw a 4/4 voice
+// Formatter.FormatAndDraw(context, staveMeasure1, notesMeasure1);
 
-// Measure 2 - second measure is placed adjacent to first measure.
-const staveMeasure2 = new Stave(staveMeasure1.width + staveMeasure1.x, 0, 400);
+// // Measure 2 - second measure is placed adjacent to first measure.
+// const staveMeasure2 = new Stave(staveMeasure1.width + staveMeasure1.x, 0, 400);
 
-const notesMeasure2_part1 = [
-  new StaveNote({ keys: ['c/4'], duration: '8' }),
-  new StaveNote({ keys: ['d/4'], duration: '8' }),
-  new StaveNote({ keys: ['b/4'], duration: '8' }),
-  new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8' }),
-];
+// const notesMeasure2_part1 = [
+//   new StaveNote({ keys: ['c/4'], duration: '8' }),
+//   new StaveNote({ keys: ['d/4'], duration: '8' }),
+//   new StaveNote({ keys: ['b/4'], duration: '8' }),
+//   new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8' }),
+// ];
 
-const notesMeasure2_part2 = [
-  new StaveNote({ keys: ['c/4'], duration: '8' }),
-  new StaveNote({ keys: ['d/4'], duration: '8' }),
-  new StaveNote({ keys: ['b/4'], duration: '8' }),
-  new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8' }),
-];
+// const notesMeasure2_part2 = [
+//   new StaveNote({ keys: ['c/4'], duration: '8' }),
+//   new StaveNote({ keys: ['d/4'], duration: '8' }),
+//   new StaveNote({ keys: ['b/4'], duration: '8' }),
+//   new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8' }),
+// ];
 
-// Create the beams for 8th notes in second measure.
-const beam1 = new Beam(notesMeasure2_part1);
-const beam2 = new Beam(notesMeasure2_part2);
+// // Create the beams for 8th notes in second measure.
+// const beam1 = new Beam(notesMeasure2_part1);
+// const beam2 = new Beam(notesMeasure2_part2);
 
-const notesMeasure2 = notesMeasure2_part1.concat(notesMeasure2_part2);
+// const notesMeasure2 = notesMeasure2_part1.concat(notesMeasure2_part2);
 
-staveMeasure2.setContext(context).draw();
-Formatter.FormatAndDraw(context, staveMeasure2, notesMeasure2);
+// staveMeasure2.setContext(context).draw();
+// Formatter.FormatAndDraw(context, staveMeasure2, notesMeasure2);
 
-// Render beams
-beam1.setContext(context).draw();
-beam2.setContext(context).draw();
+// // Render beams
+// beam1.setContext(context).draw();
+// beam2.setContext(context).draw();

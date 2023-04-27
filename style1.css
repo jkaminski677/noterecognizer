@@ -1,33 +1,64 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+#wrapper {
+  border: 1px solid peru;
+  width: 70%;
+  margin: 10px 0 20px 0;
+}
+.post {
+  border: 1px solid peru;
+  text-align: center;
+  width: 100%;
+}
+#post-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid peru;
+  width: 100%;
+}
 .vexbox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 150px;
-    border: 1px solid black;
+  text-align: center;
+  height: 150px;
+  width: 80%;
+  border: 1px solid black;
+}
+
+#drawTables {
+  width: 700px;
+  height: 50px;
+  border: 1px solid black;
+  overflow: auto;
+}
+#drawTimes {
+  width: 700px;
+  height: 50px;
+  border: 1px solid black;
+  overflow: auto;
+}
+#output {
+  width: 100%;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+}
+
+.inBut {
+  margin: 10px 10px 10px 10px;
+}
+
+@media only screen and (max-width: 600px)  {
+  #wrapper {
+    width: 98%;
   }
 
-  #drawTables {
-    width: 700px;
-    height: 50px;
-    border: 1px solid black;
-    overflow: auto;
-  }
-  #drawTimes{
-    width: 700px;
-    height: 50px;
-    border: 1px solid black;
-    overflow: auto;
-  }
-  #output {
-    /* width: 100%; */
-    border: 1px solid black;
-  }
-
-  .buttons {
-    display: flex;
-  }
-
-  .inBut{
-    margin: 10px 10px 10px 10px ;
-  }
+}
