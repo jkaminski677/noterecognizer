@@ -3,8 +3,8 @@ var durationsTab = [];
 var currentValue = null;
 var currentValueStartTime = null;
 var startDate = null; //początek słuchania
-var endDate = null;  // koniec słuchania
-var recTime = null;  // czas słuchania
+var endDate = null; // koniec słuchania
+var recTime = null; // czas słuchania
 let isRunning = true;
 
 function monitorValue(value) {
@@ -12,7 +12,7 @@ function monitorValue(value) {
     if (value != currentValue) {
       if (currentValue !== null) {
         // Zapisanie wartości i czasu trwania
-        durationsTab.push((new Date() - currentValueStartTime)/1000);
+        durationsTab.push((new Date() - currentValueStartTime) / 1000);
         notesValueTab.push(value);
       }
       currentValue = value;
@@ -25,19 +25,18 @@ function stopFunction() {
   isRunning = false;
 }
 
-function funcStop(){
-  document.getElementById('drawTables').innerText = notesValueTab;
-  document.getElementById('drawTimes').innerText = durationsTab;
+function funcStop() {
+  document.getElementById("drawTables").innerText = notesValueTab;
+  document.getElementById("drawTimes").innerText = durationsTab;
 }
 
-
 //  Pobieranie wartości z h1
-var notesValue = document.getElementById('note');
+var notesValue = document.getElementById("note");
 var H1Value = null;
 // utworzenie obserwatora
-const observer = new MutationObserver(mutationsList => {
+const observer = new MutationObserver((mutationsList) => {
   for (const mutation of mutationsList) {
-    if (mutation.type === 'childList') {
+    if (mutation.type === "childList") {
       // sprawdzenie czy wartość h1 się zmieniła
       if (mutation.target.textContent !== H1Value) {
         H1Value = mutation.target.textContent;
@@ -55,19 +54,24 @@ if (isRunning) {
   observer.observe(notesValue, config);
 }
 
-
 //  Obliczanie czasu słuchania
 var StartButton = document.getElementById("init");
-StartButton.addEventListener("click", function(){ startDate = new Date(); StartButton.disabled = true;})
+StartButton.addEventListener("click", function () {
+  startDate = new Date();
+  StartButton.disabled = true;
+});
 var stopButton = document.getElementById("stopButton");
-stopButton.addEventListener("click", function(){ endDate = new Date(); recTime = (endDate - startDate) / 1000; console.log(recTime) })
-stopButton.addEventListener("click", function(){ indexOfNote = 0; notesValueTab.forEach(DrawMyNotes);})
-
-
-
+stopButton.addEventListener("click", function () {
+  endDate = new Date();
+  recTime = (endDate - startDate) / 1000;
+  console.log(recTime);
+});
+stopButton.addEventListener("click", function () {
+  indexOfNote = 0;
+  notesValueTab.forEach(DrawMyNotes);
+});
 
 // ////////////// Nutki ///////////////////////
-
 
 // notesValueTab.forEach(DrawMyNotes);
 var indexOfNote = 0;
@@ -77,54 +81,6 @@ function DrawMyNotes(item) {
   console.log(durationsTab[indexOfNote]);
   indexOfNote += 1;
 }
-
-
-
-
-
-
-const { Factory, EasyScore, System } = Vex.Flow;
-const vf = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 620, height: 150  } });
-const score = vf.EasyScore();
-const system = vf.System({
-  x: 10,
-  y: 10,
-  width: 300
-});
-const system2 = vf.System({
-  x: 310,
-  y: 10,
-  width: 300
-});
-
-// First measure
-system.addStave({
-  voices: [
-    score.voice(score.notes('C#5/q, B4/q/r, A4, D#3')),
-
-  ]
-}).addClef('treble').addTimeSignature('4/4');
-
-system2.addStave({
-  voices: [
-    score.voice(score.notes('F#4/h, D4/8, E4, E4, E4')),
-  ]
-});
-
-
-vf.draw();
-
-
-// ////////////////////////////////////////////////////////////////
-// kopiowanie elementów w tablicy
-// let arr = [1, 2, 3, 4, 5];
-// let index = 2; // indeks elementu, który chcemy skopiować
-
-// let copy = arr[index]; // skopiuj element
-// arr.splice(index + 1, 0, copy); // wstaw kopię na pozycję o jeden większą
-
-// console.log(arr); // [1, 2, 3, 3, 4, 5]
-// ////////////////////////////////////////////////////////////////
 
 var tempo = 4;
 var tempTab = [];
@@ -139,47 +95,81 @@ function sumToFour(times) {
   while (i < times.length) {
     if (sum + times[i] < tempo) {
       sum += times[i];
-      tempTab.push(times[i])
+      tempTab.push(times[i]);
       result.push(times[i]);
       i++;
-      console.log("done1")
-      console.log(result)
+      // console.log("done1")
     } else if (sum + times[i] === tempo) {
       sum += times[i];
       result.push(times[i]);
       i++;
       sum = 0;
-      console.log("done2")
+      // console.log("done2")
     } else {
-      console.log("done3");
+      // console.log("done3");
       const diff = tempo - sum;
-      tempTab.push(diff)
-      console.log("tempTab: ")
-      console.log(tempTab)
-      tempTab = []
+      tempTab.push(diff);
+      tempTab = [];
       result.push(diff);
       // result.push(times[i] - diff);
       times.splice(i, 1, diff, times[i] - diff);
-      console.log("TIMES: ")
-      console.log(times)
 
       copy = notesValueTab[i]; // skopiuj element
       notesValueTab.splice(i + 1, 0, copy); // wstaw kopię na pozycję o jeden większą
-      console.log("NOTESTABS: ")
-      console.log(notesValueTab)
-
-      console.log("SUMA: " + (sum + diff))
-      console.log(result)
       sum = 0;
       i++;
-
     }
   }
-  return result;
+  times = durationsTab;
+  console.log("NOTESTAB: ");
+  console.log(notesValueTab);
+  console.log("DURATIONSTAB: ");
+  console.log(durationsTab);
 }
+stopButton.addEventListener("click", function () {
+  sumToFour(durationsTab);
+});
 
-stopButton.addEventListener("click", function(){ sumToFour(durationsTab) })
-// console.log(sumToFour(durationsTab));
+
+
+
+// function WriteNotes() {
+//   for (let i = 0; i < durationsTab.length; i++) {
+//     window['vf' + (i+1)] =new Vex.Flow.Factory({ renderer: { elementId: "output", width: 620, height: 150 },});
+//   }
+// }
+
+
+const { Factory, EasyScore, System } = Vex.Flow;
+const vf = new Vex.Flow.Factory({
+  renderer: { elementId: "output", width: 620, height: 150 },
+});
+const score = vf.EasyScore();
+const system = vf.System({
+  x: 10,
+  y: 10,
+  width: 300,
+});
+const system2 = vf.System({
+  x: 310,
+  y: 10,
+  width: 300,
+});
+
+// First measure
+system
+  .addStave({
+    voices: [score.voice(score.notes("C#5/q, B4/q/r, A4, D#3"))],
+  })
+  .addClef("treble")
+  .addTimeSignature("4/4");
+
+system2.addStave({
+  voices: [score.voice(score.notes("F#4/h, D4/8, E4, E4, E4"))],
+});
+
+vf.draw();
+
 
 
 
@@ -198,7 +188,7 @@ stopButton.addEventListener("click", function(){ sumToFour(durationsTab) })
 //   voices: [
 //     // Top voice has 4 quarter notes with stems up.
 //     score.voice(score.notes('C#5/h, A4/q., B4/8/r', { stem: 'up' })),
-   
+
 //     // Bottom voice has two half notes, with stems down.
 //     score.voice(score.notes('C#4/h, C#4', { stem: 'down' }))
 //   ]
@@ -206,10 +196,6 @@ stopButton.addEventListener("click", function(){ sumToFour(durationsTab) })
 
 // // Draw it!
 // vf.draw();
-
-
-
-
 
 // const {
 //   Renderer,
@@ -281,10 +267,6 @@ stopButton.addEventListener("click", function(){ sumToFour(durationsTab) })
 // // Render voice
 // voice.draw(context, stave);
 
-
-
-
-
 // // This approach to importing classes works in CJS contexts (i.e., a regular <script src="..."> tag).
 // const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
 
@@ -298,7 +280,6 @@ stopButton.addEventListener("click", function(){ sumToFour(durationsTab) })
 // // Configure the rendering context.
 // renderer.resize(720, 130);
 // const context = renderer.getContext();
-
 
 // // Measure 1
 // const staveMeasure1 = new Stave(10, 0, 200);
