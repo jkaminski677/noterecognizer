@@ -30,7 +30,7 @@ function getValue() {
 }
 
 function init() {
-  StartButton.style.display = "none";
+  // StartButton.style.display = "none";
     var source;
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
     var analyser = audioContext.createAnalyser();

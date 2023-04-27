@@ -1,5 +1,5 @@
 var notesValueTab = [];
-var durations = [];
+var durationsTab = [];
 var currentValue = null;
 var currentValueStartTime = null;
 var startDate = null; //początek słuchania
@@ -12,16 +12,12 @@ function monitorValue(value) {
     if (value != currentValue) {
       if (currentValue !== null) {
         // Zapisanie wartości i czasu trwania
-        durations.push((new Date() - currentValueStartTime)/1000);
-  
+        durationsTab.push((new Date() - currentValueStartTime)/1000);
         notesValueTab.push(value);
       }
       currentValue = value;
       currentValueStartTime = new Date();
     }
-    // console.log(notes);
-    // console.log(durations);
-    // console.log(document.getElementById('note').textContent);
   }
 }
 
@@ -31,7 +27,7 @@ function stopFunction() {
 
 function funcStop(){
   document.getElementById('drawTables').innerText = notesValueTab;
-  document.getElementById('drawTimes').innerText = durations;
+  document.getElementById('drawTimes').innerText = durationsTab;
 }
 
 
@@ -62,10 +58,11 @@ if (isRunning) {
 
 //  Obliczanie czasu słuchania
 var StartButton = document.getElementById("init");
-StartButton.addEventListener("click", function(){ startDate = new Date(); })
+StartButton.addEventListener("click", function(){ startDate = new Date(); StartButton.disabled = true;})
 var stopButton = document.getElementById("stopButton");
 stopButton.addEventListener("click", function(){ endDate = new Date(); recTime = (endDate - startDate) / 1000; console.log(recTime) })
 stopButton.addEventListener("click", function(){ indexOfNote = 0; notesValueTab.forEach(DrawMyNotes);})
+
 
 
 
@@ -77,12 +74,7 @@ var indexOfNote = 0;
 var timin = 0;
 function DrawMyNotes(item) {
   console.log(item);
-  console.log(durations[indexOfNote]);
-  if (timin <= 4 ) {
-    timin = timin + durations[indexOfNote];
-    console.log("Timin: " + timin);
-  }
-
+  console.log(durationsTab[indexOfNote]);
   indexOfNote += 1;
 }
 
@@ -123,6 +115,71 @@ system2.addStave({
 vf.draw();
 
 
+// ////////////////////////////////////////////////////////////////
+// kopiowanie elementów w tablicy
+// let arr = [1, 2, 3, 4, 5];
+// let index = 2; // indeks elementu, który chcemy skopiować
+
+// let copy = arr[index]; // skopiuj element
+// arr.splice(index + 1, 0, copy); // wstaw kopię na pozycję o jeden większą
+
+// console.log(arr); // [1, 2, 3, 3, 4, 5]
+// ////////////////////////////////////////////////////////////////
+
+var tempo = 4;
+var tempTab = [];
+let copy = null;
+// var times = [2.02,0.141,1.843,0.309,0.326,0.167,0.474,0.41,0.724,0.877,1.108,0.677,0.241,0.476,0.675,0.475,1.101,0.118,0.333,0.284,0.508,1.076,0.151,0.073,0.527,0.691,0.276,0.726,0.942,0.384,0.317,0.634,0.266,0.451,0.55,0.15,0.359,0.642,0.041,0.193,0.659,1.359,0.116,0.919,0.667,0.133,0.317,0.5,1.476,0.494,0.157];
+
+function sumToFour(times) {
+  const result = [];
+  let sum = 0;
+  let i = 0;
+
+  while (i < times.length) {
+    if (sum + times[i] < tempo) {
+      sum += times[i];
+      tempTab.push(times[i])
+      result.push(times[i]);
+      i++;
+      console.log("done1")
+      console.log(result)
+    } else if (sum + times[i] === tempo) {
+      sum += times[i];
+      result.push(times[i]);
+      i++;
+      sum = 0;
+      console.log("done2")
+    } else {
+      console.log("done3");
+      const diff = tempo - sum;
+      tempTab.push(diff)
+      console.log("tempTab: ")
+      console.log(tempTab)
+      tempTab = []
+      result.push(diff);
+      // result.push(times[i] - diff);
+      times.splice(i, 1, diff, times[i] - diff);
+      console.log("TIMES: ")
+      console.log(times)
+
+      copy = notesValueTab[i]; // skopiuj element
+      notesValueTab.splice(i + 1, 0, copy); // wstaw kopię na pozycję o jeden większą
+      console.log("NOTESTABS: ")
+      console.log(notesValueTab)
+
+      console.log("SUMA: " + (sum + diff))
+      console.log(result)
+      sum = 0;
+      i++;
+
+    }
+  }
+  return result;
+}
+
+stopButton.addEventListener("click", function(){ sumToFour(durationsTab) })
+// console.log(sumToFour(durationsTab));
 
 
 
