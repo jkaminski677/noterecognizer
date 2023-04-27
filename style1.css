@@ -24,7 +24,10 @@ body {
   width: 100%;
 }
 .vexbox {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   height: 150px;
   width: 80%;
   border: 1px solid black;
@@ -59,6 +62,12 @@ body {
 @media only screen and (max-width: 600px)  {
   #wrapper {
     width: 96%;
+  }
+  #output {
+    transform: scale(0.6);
+  }
+  .vexbox {
+    width: 100%;
   }
 
 }
