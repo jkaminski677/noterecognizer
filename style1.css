@@ -65,7 +65,7 @@ body {
   }
   #output {
     transform: translateX(-20%) scale(0.6);
-    /* width: 150%; */
+    width: 920px;
   }
   .vexbox {
     width: 100%;

@@ -1,3 +1,6 @@
+// window.jsPDF = window.jspdf.jsPDF;
+
+
 var notesValueTab = [];
 var durationsTab = [];
 var currentValue = null;
@@ -64,27 +67,20 @@ var stopButton = document.getElementById("stopButton");
 stopButton.addEventListener("click", function () {
   endDate = new Date();
   recTime = (endDate - startDate) / 1000;
+  console.log("rectime: ")
   console.log(recTime);
-});
-stopButton.addEventListener("click", function () {
-  indexOfNote = 0;
-  notesValueTab.forEach(DrawMyNotes);
+  stopButton.disabled = true;
+  StartButton.disabled = true;
 });
 
-// ////////////// Nutki ///////////////////////
 
-// notesValueTab.forEach(DrawMyNotes);
-var indexOfNote = 0;
-var timin = 0;
-function DrawMyNotes(item) {
-  console.log(item);
-  console.log(durationsTab[indexOfNote]);
-  indexOfNote += 1;
-}
 
+// ///////////////////// Dopasowanie tablic czasowych oraz nutowych ///////////////////////////////
 var tempo = 4;
 var tempTab = [];
+var AmountOfLines = [];
 let copy = null;
+var AllTimeInRec = null;
 // var times = [2.02,0.141,1.843,0.309,0.326,0.167,0.474,0.41,0.724,0.877,1.108,0.677,0.241,0.476,0.675,0.475,1.101,0.118,0.333,0.284,0.508,1.076,0.151,0.073,0.527,0.691,0.276,0.726,0.942,0.384,0.317,0.634,0.266,0.451,0.55,0.15,0.359,0.642,0.041,0.193,0.659,1.359,0.116,0.919,0.667,0.133,0.317,0.5,1.476,0.494,0.157];
 
 function sumToFour(times) {
@@ -113,38 +109,74 @@ function sumToFour(times) {
       result.push(diff);
       // result.push(times[i] - diff);
       times.splice(i, 1, diff, times[i] - diff);
-
+      AmountOfLines.push(i);
       copy = notesValueTab[i]; // skopiuj element
       notesValueTab.splice(i + 1, 0, copy); // wstaw kopię na pozycję o jeden większą
       sum = 0;
       i++;
     }
   }
+  let e = 0;
+  while (e < times.length) {
+    AllTimeInRec += times[e];
+    e++;
+  }
   times = durationsTab;
   console.log("NOTESTAB: ");
   console.log(notesValueTab);
   console.log("DURATIONSTAB: ");
   console.log(durationsTab);
+  console.log("SUMMED TIME: ");
+  console.log(AllTimeInRec);
+  WriteNotes();
+  e = 0;
 }
+
+
 stopButton.addEventListener("click", function () {
   sumToFour(durationsTab);
 });
 
 
 
+// ////////////// Renderowanie nut ///////////////////////
 
-// function WriteNotes() {
-//   for (let i = 0; i < durationsTab.length; i++) {
-//     window['vf' + (i+1)] =new Vex.Flow.Factory({ renderer: { elementId: "output", width: 620, height: 150 },});
-//   }
-// }
+
+
+
+function WriteNotes() {
+  var AmountOfLinesTree = [];
+  let d = 0;
+  console.log(AmountOfLines);
+  for (let k = 0; k < AmountOfLines.length; k++) {
+    if(d === 2 ){
+      AmountOfLinesTree.push(k);
+      d=0;
+    }
+    d++;
+  }
+  console.log(AmountOfLinesTree);
+  for(let j = 0; j < AmountOfLinesTree.length; j++){
+    window['vf' + (j)] = new Vex.Flow.Factory({ renderer: { elementId: "output", width: 920, height: 150 },});
+
+    for (let i = 0; i < durationsTab.length; i++) {
+      
+      window['score' + (i)] = window['vf' + (j)].EasyScore();
+      window['system' + (i)] = window['vf' + (j)].System({x:10, y:10, width:300,})
+    }
+
+  }
+  
+}
 
 
 const { Factory, EasyScore, System } = Vex.Flow;
 const vf = new Vex.Flow.Factory({
-  renderer: { elementId: "output", width: 620, height: 150 },
+  renderer: { elementId: "output", width: 920, height: 150 },
 });
 const score = vf.EasyScore();
+const score2 = vf.EasyScore();
+const score3 = vf.EasyScore();
 const system = vf.System({
   x: 10,
   y: 10,
@@ -152,6 +184,11 @@ const system = vf.System({
 });
 const system2 = vf.System({
   x: 310,
+  y: 10,
+  width: 300,
+});
+const system3 = vf.System({
+  x: 610,
   y: 10,
   width: 300,
 });
@@ -165,7 +202,11 @@ system
   .addTimeSignature("4/4");
 
 system2.addStave({
-  voices: [score.voice(score.notes("F#4/h, D4/8, E4, E4, E4"))],
+  voices: [score2.voice(score2.notes("F#4/h, D4/8, E4, E4, E4"))],
+});
+
+system3.addStave({
+  voices: [score3.voice(score3.notes("d#4/h, c4/8, a4, a4, f4"))],
 });
 
 vf.draw();
@@ -324,3 +365,62 @@ vf.draw();
 // // Render beams
 // beam1.setContext(context).draw();
 // beam2.setContext(context).draw();
+
+
+
+// /////////// Drukowanie nut ////////////////
+
+
+
+// var doc = new jsPDF();
+
+
+// function saveDiv(divId, title) {
+//  doc.fromHTML(`<html><head><title>${title}</title></head><body>` + document.getElementById(divId).innerHTML + `</body></html>`);
+//  doc.save('div.pdf');
+// }
+
+// function printDiv(divId,
+//   title) {
+
+//   let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+//   mywindow.document.write(`<html><head><title>${title}</title>`);
+//   mywindow.document.write('</head><body>');
+//   mywindow.document.write(document.getElementById(divId).innerHTML);
+//   mywindow.document.write('</body></html>');
+
+//   mywindow.document.close(); // necessary for IE >= 10
+//   mywindow.focus(); // necessary for IE >= 10*/
+
+//   mywindow.print();
+//   mywindow.close();
+
+//   return true;
+// }
+
+// function saveDiv(divId, title) {
+//   var element = document.getElementById('wrapper');
+//   html2pdf().from(element).save();
+// }
+window.jsPDF = window.jspdf.jsPDF;
+
+
+function saveDiv(divId, title) {
+  var doc = new jsPDF();
+	
+// Source HTMLElement or a string containing HTML.
+var elementHTML = document.querySelector("#wrapper");
+
+doc.html(elementHTML, {
+    callback: function(doc) {
+        // Save the PDF
+        doc.save('sample-document.pdf');
+    },
+    x: 15,
+    y: 15,
+    width: 170, //target width in the PDF document
+    windowWidth: 650 //window width in CSS pixels
+});
+
+}

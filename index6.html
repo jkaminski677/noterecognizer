@@ -13,7 +13,11 @@
         <link rel="stylesheet" href="style1.css">
 		<!-- do robienia nut: https://www.vexflow.com/    -->
         <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/build/cjs/vexflow.js"></script>
-    <meta name="twitter:card" content="summary"/>
+        
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> -->
+        <script src="html2pdf.bundle.min.js"></script>
+        <script src="js/jsPDF/dist/jspdf.umd.js"></script>
+        <meta name="twitter:card" content="summary"/>
 	</head>
 
     <body>
@@ -26,9 +30,13 @@
                 </header>
                 
                 <section id="post-body">
-                    <div class="vexbox">
+                    <div class="vexbox" id="vexbox">
                         <div id="output"></div>
                     </div>
+                    
+                    <button onclick="printDiv('output','Title')">print div</button>
+
+                    <button onclick="saveDiv('output','Title')">save div as pdf</button>
                     <p><canvas class="visualizer" width="640" height="100"></canvas>
                     <br>
                     <h1 id="note">Press start to begin</h1>
@@ -84,7 +92,7 @@
                 </section>
             </article>
         </section>
-
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> -->
     <script src="tuner.js"></script>
     <script src="musicNotes.js"></script>
 
